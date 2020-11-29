@@ -1,6 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { addHours } from 'date-fns';
 import { fetchErrors, isLoading } from '../../../common-types';
+import { RootState } from '../../../redux';
 import { errorModalActions } from '../../error-modal';
 import * as types from './daly-table-slice-types';
 
@@ -41,7 +42,8 @@ const thunks = {
         void,
         types.IDalyItemForFetch,
         {
-            rejectValue: fetchErrors
+            rejectValue: fetchErrors,
+            state: RootState
         }
     >(
         `${SLICE_NAME}/fetchDalyItemAdded`,
@@ -49,6 +51,7 @@ const thunks = {
             //Имитация задержки ответа
             await new Promise((resolve) => setTimeout(() => resolve(), 2000));
             try {
+                //TODO надо разбираться, как это типизировать, пока 
                 const { cancelAddItem } = thunkAPI.getState().dalyTable;
                 if (cancelAddItem) return;
                 throw new Error('Функционал по добавлению записи ещё не реализован :(');
