@@ -19,16 +19,16 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-    const handleCancel = () => {
-        form.resetFields();
-        onCancel();
-    }
-
     useEffect(() => {
         if (!visible && loading) {
             setLoading(false);
         }
     }, [visible]);
+
+    const handleCancel = () => {
+        form.resetFields();
+        onCancel();
+    }
 
     const handleOk = async () => {
         try{

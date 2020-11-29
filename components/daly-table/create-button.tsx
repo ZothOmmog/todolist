@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { fetchErrors } from '../../common-types';
 import { useAppDispatch } from '../../redux';
 import { CreateEditModalForm } from './create-edit-modal-form';
-import { dalyTableThunks, IDalyItemForFetch } from './daly-table-slice';
+import { dalyTableActions, dalyTableThunks, IDalyItemForFetch } from './daly-table-slice';
 
 interface ICreateButtonProps {
     
@@ -27,7 +27,10 @@ export const CreateButton: React.FC = () => {
         setVisible(true);
     };
 
-    const onCancel = () => setVisible(false);
+    const onCancel = () => {
+        setVisible(false);
+        dispatch(dalyTableActions.cancelAddItem());
+    }
 
     return (
         <>

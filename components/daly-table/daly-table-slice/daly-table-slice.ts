@@ -49,6 +49,8 @@ const thunks = {
             //Имитация задержки ответа
             await new Promise((resolve) => setTimeout(() => resolve(), 2000));
             try {
+                const { cancelAddItem } = thunkAPI.getState().dalyTable;
+                if (cancelAddItem) return;
                 throw new Error('Функционал по добавлению записи ещё не реализован :(');
             }
             catch(e) {
@@ -78,6 +80,10 @@ const { actions, reducer } = createSlice({
         builder.addCase(thunks.fetchDalyItems.fulfilled, (state, action) => {
             console.log(action);
             adapter.setAll(state, action.payload);
+        });
+
+        builder.addCase(thunks.fetchDalyItemAdded.pending, (state) => {
+            state.cancelAddItem = false;
         });
         builder.addCase(thunks.fetchDalyItemAdded.rejected, () => {
             
