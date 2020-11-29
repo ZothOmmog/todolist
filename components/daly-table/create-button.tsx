@@ -5,10 +5,6 @@ import { useAppDispatch } from '../../redux';
 import { CreateEditModalForm } from './create-edit-modal-form';
 import { dalyTableActions, dalyTableThunks, IDalyItemForFetch } from './daly-table-slice';
 
-interface ICreateButtonProps {
-    
-}
-
 export const CreateButton: React.FC = () => {
     const [visible, setVisible] = useState(false);
 

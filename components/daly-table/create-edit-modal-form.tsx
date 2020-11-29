@@ -1,18 +1,28 @@
 import { Button, Form, Modal, Input, DatePicker, TimePicker, Row, Col } from 'antd';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { IDalyItemForFetch } from './daly-table-slice';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
 interface ICreateEditModalFormProps {
     visible: boolean;
+    initialValues?: {
+        date: Moment,
+        timeStart: Moment,
+        timeEnd: Moment,
+        keyTask: number,
+        desctiption: string
+    };
     onCreate: (values: IDalyItemForFetch) => Promise<void>;
     onCancel: () => void;
 }
 
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     visible,
+    initialValues = {
+        date: moment(new Date())
+    },
     onCreate,
     onCancel
 }) => {
@@ -69,9 +79,7 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             <Form
                 layout="vertical"
                 form={form}
-                initialValues={{
-                    date: moment(new Date())
-                }}
+                initialValues={initialValues}
             >
                 <Form.Item
                     name='date'
