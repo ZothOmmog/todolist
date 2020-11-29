@@ -4,3 +4,7 @@ export enum isLoading {
     fullfiled,
     rejected
 }
+
+export enum fetchErrors {
+    common
+}

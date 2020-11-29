@@ -1,8 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { addHours } from 'date-fns';
-import { formatISODuration } from 'date-fns/esm';
-import { COMMON_FETCH_ERROR } from '../../../common-constants';
-import { isLoading } from '../../../common-types';
+import { fetchErrors, isLoading } from '../../../common-types';
 import { errorModalActions } from '../../error-modal';
 import * as types from './daly-table-slice-types';
 
@@ -43,7 +41,7 @@ const thunks = {
         void,
         types.IDalyItemForFetch,
         {
-            rejectValue: -1
+            rejectValue: fetchErrors
         }
     >(
         `${SLICE_NAME}/fetchDalyItemAdded`,
@@ -58,7 +56,7 @@ const thunks = {
                     title: 'Ошибка при добавлении записи',
                     message: e.message
                 }));
-                return thunkAPI.rejectWithValue(-1);
+                return thunkAPI.rejectWithValue(fetchErrors.common);
             }
         }
     )

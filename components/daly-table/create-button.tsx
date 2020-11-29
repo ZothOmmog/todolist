@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { useState } from 'react';
-import { COMMON_FETCH_ERROR } from '../../common-constants';
+import { fetchErrors } from '../../common-types';
 import { useAppDispatch } from '../../redux';
 import { CreateEditModalForm } from './create-edit-modal-form';
 import { dalyTableThunks, IDalyItemForFetch } from './daly-table-slice';
@@ -14,11 +14,10 @@ export const CreateButton: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const onCreate = (dalyItem: IDalyItemForFetch) => {
-        //Эмитация задержки ответа
         return new Promise<void>((resolve, reject) => {
             return dispatch(dalyTableThunks.fetchDalyItemAdded(dalyItem)).then((value) => {
                 console.log(value);
-                if (value.payload === COMMON_FETCH_ERROR) reject();
+                if (value.payload === fetchErrors.common) reject();
                 else resolve();
             });
         })
