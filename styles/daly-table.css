@@ -1,0 +1,28 @@
+.daly-table {
+    flex-grow: 1;
+
+}
+
+.daly-table .editable-cell-value-wrap {
+    padding: 4px;
+}
+
+.daly-table .editable-cell-value-wrap:hover {
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    cursor: text;
+}
+
+.daly-table, .daly-table .ant-spin-nested-loading, .daly-table .ant-spin-nested-loading .ant-spin-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.daly-table .ant-table {
+    flex-grow: 1;
+}
+
+.daly-table .ant-table-pagination.ant-pagination {
+    margin: 0;
+}

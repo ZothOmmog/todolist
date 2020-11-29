@@ -1,0 +1,1 @@
+export const COMMON_FETCH_ERROR = -1;
