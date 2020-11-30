@@ -35,6 +35,10 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         }
     }, [visible]);
 
+    useEffect(() => {
+        form.resetFields();
+    }, [visible]);
+
     const handleCancel = () => {
         form.resetFields();
         onCancel();

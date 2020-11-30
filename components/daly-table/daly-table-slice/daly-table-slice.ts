@@ -1,10 +1,12 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import Item from 'antd/lib/list/Item';
 import { addHours } from 'date-fns';
 import { fetchErrors, isLoading } from '../../../common-types';
 import { RootState } from '../../../redux';
 import { errorModalActions } from '../../error-modal';
 import * as types from './daly-table-slice-types';
 
+let MOCK_ID = 2;
 const MOCK_DALY_ITEMS = [
     {
         key: 0,
@@ -64,12 +66,43 @@ const thunks = {
                 return thunkAPI.rejectWithValue(fetchErrors.common);
             }
         }
+    ),
+    fetchEditItem: createAsyncThunk<
+        types.IDalyTableItemTask[],
+        types.IDalyTableItemTask,
+        {
+            rejectValue: fetchErrors,
+            state: RootState
+        }
+    >(
+        `${SLICE_NAME}/fetchEditItem`,
+        async (editedItem, thunkAPI) => {
+            try {
+                throw new Error('Тестирование обработки ошибок');
+                MOCK_DALY_ITEMS[
+                    MOCK_DALY_ITEMS.findIndex(item => item.key === editedItem.key)
+                ] = editedItem;
+                MOCK_DALY_ITEMS.push();
+                return MOCK_DALY_ITEMS;
+            }
+            catch(e) {
+                thunkAPI.dispatch(errorModalActions.showError({
+                    title: 'Ошибка при редактировании записи',
+                    message: e.message
+                }));
+                return thunkAPI.rejectWithValue(fetchErrors.common);
+            }
+        }
     )
 }
 
 const { actions, reducer } = createSlice({
     name: SLICE_NAME,
-    initialState: adapter.getInitialState({ isLoading: isLoading.initial, cancelAddItem: false }),
+    initialState: adapter.getInitialState({
+        isLoading: isLoading.initial,
+        cancelAddItem: false,
+        cancelEditItem: false
+    }),
     reducers: {
         dalyItemAdded: adapter.addOne,
         cancelAddItem(state) {
@@ -88,8 +121,9 @@ const { actions, reducer } = createSlice({
         builder.addCase(thunks.fetchDalyItemAdded.pending, (state) => {
             state.cancelAddItem = false;
         });
-        builder.addCase(thunks.fetchDalyItemAdded.rejected, () => {
-            
+
+        builder.addCase(thunks.fetchEditItem.pending, (state) => {
+            state.cancelEditItem = false;
         });
     }
 });
