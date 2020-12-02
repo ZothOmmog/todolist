@@ -131,6 +131,7 @@ export const DalyTable: React.FC = () => {
                     timeEnd: editFormData?.timeEnd,
                     timeStart: editFormData?.timeStart
                 }}
+                isEdit
             />
         </>
     )

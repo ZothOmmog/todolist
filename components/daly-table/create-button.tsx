@@ -35,6 +35,7 @@ export const CreateButton: React.FC = () => {
                 onCancel={onCancel}
                 onCreate={onCreate}
                 visible={visible}
+                isEdit={false}
             />
         </>
     );

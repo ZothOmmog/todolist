@@ -16,6 +16,7 @@ interface ICreateEditModalFormProps {
     };
     onCreate: (values: IDalyItemForFetch) => Promise<void>;
     onCancel: () => void;
+    isEdit: boolean;
 }
 
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
@@ -24,7 +25,8 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         date: moment(new Date())
     },
     onCreate,
-    onCancel
+    onCancel,
+    isEdit
 }) => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
@@ -74,10 +76,10 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             visible={visible}
             onCancel={handleCancel}
             onOk={handleOk}
-            title='Добавить запись'
+            title={`${isEdit ? 'Редактировать' : 'Добавить'} запись`}
             footer={[
                 <Button key='back' onClick={handleCancel}>Отмена</Button>,
-                <Button key='submit' type='primary' loading={loading} onClick={handleOk}>Создать</Button>
+                <Button key='submit' type='primary' loading={loading} onClick={handleOk}>{isEdit ? 'Редактировать' : 'Создать'}</Button>
             ]}
         >
             <Form
