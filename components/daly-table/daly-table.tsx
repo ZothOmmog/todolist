@@ -9,11 +9,7 @@ import moment, { Moment } from 'moment';
 import { CreateEditModalForm } from './create-edit-modal-form';
 import { fetchErrors } from '../../common-types';
 
-interface EditableRowProps {
-    index: number;
-}
-
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+const EditableRow: React.FC<unknown> = (props) => {
     return (
         <tr {...props} style={{ cursor: 'pointer' }} />
     );
