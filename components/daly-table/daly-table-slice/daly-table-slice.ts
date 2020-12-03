@@ -37,11 +37,11 @@ const thunks = {
     fetchDalyItems: createAsyncThunk(
         `${SLICE_NAME}/fetchDalyItems`,
         () => {
-            return MOCK_DALY_ITEMS;
+            return [...MOCK_DALY_ITEMS];
         }
     ),
     fetchDalyItemAdded: createAsyncThunk<
-        void,
+        types.IDalyTableItemTask[],
         types.IDalyItemForFetch,
         {
             rejectValue: fetchErrors,
@@ -49,14 +49,14 @@ const thunks = {
         }
     >(
         `${SLICE_NAME}/fetchDalyItemAdded`,
-        async (_dalyItem, thunkAPI) => {
+        async (dalyItem, thunkAPI) => {
             //Имитация задержки ответа
             await new Promise((resolve) => setTimeout(() => resolve(), 2000));
             try {
-                //TODO надо разбираться, как это типизировать, пока 
                 const { cancelAddItem } = thunkAPI.getState().dalyTable;
                 if (cancelAddItem) return;
-                throw new Error('Функционал по добавлению записи ещё не реализован :(');
+                MOCK_DALY_ITEMS.push({ ...dalyItem, key: MOCK_ID++ });
+                return [...MOCK_DALY_ITEMS];
             }
             catch(e) {
                 thunkAPI.dispatch(errorModalActions.showError({
@@ -78,7 +78,6 @@ const thunks = {
         `${SLICE_NAME}/fetchEditItem`,
         async (editedItem, thunkAPI) => {
             try {
-                throw new Error('Тестирование обработки ошибок');
                 MOCK_DALY_ITEMS[
                     MOCK_DALY_ITEMS.findIndex(item => item.key === editedItem.key)
                 ] = editedItem;
@@ -114,12 +113,14 @@ const { actions, reducer } = createSlice({
             state.isLoading = isLoading.loading;
         });
         builder.addCase(thunks.fetchDalyItems.fulfilled, (state, action) => {
-            console.log(action);
             adapter.setAll(state, action.payload);
         });
 
         builder.addCase(thunks.fetchDalyItemAdded.pending, (state) => {
             state.cancelAddItem = false;
+        });
+        builder.addCase(thunks.fetchDalyItemAdded.fulfilled, (state, action) => {
+            adapter.setAll(state, action.payload);
         });
 
         builder.addCase(thunks.fetchEditItem.pending, (state) => {
