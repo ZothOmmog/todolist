@@ -14,7 +14,10 @@ export const CreateButton: React.FC = () => {
             return dispatch(dalyTableThunks.fetchDalyItemAdded(dalyItem)).then((value) => {
                 console.log(value);
                 if (value.payload === fetchErrors.common) reject();
-                else resolve();
+                else {
+                    resolve();
+                    setVisible(false);
+                }
             });
         })
     };
