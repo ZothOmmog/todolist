@@ -19,9 +19,9 @@ export const DalyTable: React.FC = () => {
     const dataSource = useSelector(dalyTableSelectors.selectAll);
     const [visibleEditForm, setVisibleEditForm] = useState(false);
     const [editFormData, setEditFormData] = useState<{
-        date: Moment,
-        timeStart: Moment,
-        timeEnd: Moment,
+        date: string,
+        timeStart: string,
+        timeEnd: string,
         keyTask: number,
         desctiption: string
     }>(null);
@@ -87,9 +87,9 @@ export const DalyTable: React.FC = () => {
                 onRow={(record) => ({
                     onClick() {
                         setEditFormData({
-                            date: moment(record.date),
-                            timeStart: moment(record.timeStart),
-                            timeEnd: moment(record.timeEnd),
+                            date: record.date,
+                            timeStart: record.timeStart,
+                            timeEnd: record.timeEnd,
                             desctiption: record.desctiption,
                             keyTask: record.keyTask
                         });
@@ -104,19 +104,27 @@ export const DalyTable: React.FC = () => {
                     setKeyEditItem(null);
                     setVisibleEditForm(false);
                 }}
-                onCreate={() => {
-                    return new Promise<void>((resolve, reject) => {
-                        return dispatch(dalyTableThunks.fetchEditItem({
-                            key: keyEditItem,
-                            date: editFormData.date.toDate().toUTCString(),
-                            timeStart: editFormData.timeStart.toDate().toUTCString(),
-                            timeEnd: editFormData.timeEnd.toDate().toUTCString(),
-                            desctiption: editFormData.desctiption,
-                            keyTask: editFormData.keyTask
-                        })).then((value) => {
+                onCreate={(newDalyItem) => {
+                    return new Promise<0 | 1>(async (resolve, reject) => {
+                        if(Object.getOwnPropertyNames(newDalyItem).every(
+                            key => newDalyItem[key] === editFormData[key]
+                        )) resolve(1);
+                        else {
+                            const value = await dispatch(dalyTableThunks.fetchEditItem({
+                                key: keyEditItem,
+                                date: newDalyItem.date,
+                                timeStart: newDalyItem.timeStart,
+                                timeEnd: newDalyItem.timeEnd,
+                                desctiption: newDalyItem.desctiption,
+                                keyTask: newDalyItem.keyTask
+                            }));
+    
                             if (value.payload === fetchErrors.common) reject();
-                            else resolve();
-                        });
+                            else {
+                                setVisibleEditForm(false);
+                                resolve(0);
+                            }
+                        }
                     })
                 }}
                 visible={visibleEditForm}

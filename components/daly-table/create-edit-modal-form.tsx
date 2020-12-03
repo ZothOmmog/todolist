@@ -1,20 +1,21 @@
-import { Button, Form, Modal, Input, DatePicker, TimePicker, Row, Col } from 'antd';
+import { Button, Form, Modal, Input, DatePicker, TimePicker, Row, Col, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import moment, { Moment } from 'moment';
 import { IDalyItemForFetch } from './daly-table-slice';
+import { startOfDay } from 'date-fns';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
 interface ICreateEditModalFormProps {
     visible: boolean;
     initialValues?: {
-        date: Moment,
-        timeStart: Moment,
-        timeEnd: Moment,
+        date: string,
+        timeStart: string,
+        timeEnd: string,
         keyTask: number,
         desctiption: string
     };
-    onCreate: (values: IDalyItemForFetch) => Promise<void>;
+    onCreate: (values: IDalyItemForFetch) => Promise<0 | 1>;
     onCancel: () => void;
     isEdit: boolean;
 }
@@ -22,7 +23,7 @@ interface ICreateEditModalFormProps {
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     visible,
     initialValues = {
-        date: moment(new Date())
+        date: startOfDay(new Date()).toUTCString()
     },
     onCreate,
     onCancel,
@@ -52,15 +53,45 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             const values = await form.validateFields();
 
             const newDalyItem: IDalyItemForFetch = {
-                date: values.date.toDate().toUTCString(),
+                date: values.date.startOf('day').toDate().toUTCString(),
                 desctiption: values.desctiption,
                 keyTask: values.keyTask,
                 timeEnd: values.timeEnd.toDate().toUTCString(),
                 timeStart: values.timeStart.toDate().toUTCString()
             }
-            await onCreate(newDalyItem);
 
-            form.resetFields();
+            const result = await onCreate(newDalyItem);
+            
+            if (result === 0) {
+                notification['success']({
+                    message: `${isEdit ? 'Редактирование' : 'Добавление'} записи`,
+                    description: (
+                        <>
+                            {`${isEdit ? 'Редактирование' : 'Добавление'} записи выполнено успешно`}
+                            <br/>
+                            {moment(new Date()).format('DD.MM.yyyy HH:mm:ss')}
+                        </>
+                    )
+                });
+            }
+            else if (result === 1) {
+                notification['warning']({
+                    message: 'Редактирование записи',
+                    description: <>Изменений не найдено<br/>{moment(new Date()).format('DD.MM.yyyy HH:mm:ss')}</>
+                });
+            }
+            else {
+                notification['error']({
+                    message: `${isEdit ? 'Редактирование' : 'Добавление'} записи`,
+                    description: (
+                        <>
+                            Неизвестный результат выполнения
+                            <br/>
+                            {moment(new Date()).format('DD.MM.yyyy HH:mm:ss')}
+                        </>
+                    )
+                });
+            }
         }
         catch(e) {
             console.error(e);
@@ -85,7 +116,12 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             <Form
                 layout="vertical"
                 form={form}
-                initialValues={initialValues}
+                initialValues={{
+                    ...initialValues,
+                    date: moment(initialValues.date),
+                    timeStart: initialValues.timeStart ? moment(initialValues.timeStart) : null,
+                    timeEnd: initialValues.timeEnd ? moment(initialValues.timeEnd) : null
+                }}
             >
                 <Form.Item
                     name='date'

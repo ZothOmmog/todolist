@@ -10,15 +10,14 @@ export const CreateButton: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const onCreate = (dalyItem: IDalyItemForFetch) => {
-        return new Promise<void>((resolve, reject) => {
-            return dispatch(dalyTableThunks.fetchDalyItemAdded(dalyItem)).then((value) => {
-                console.log(value);
-                if (value.payload === fetchErrors.common) reject();
-                else {
-                    resolve();
-                    setVisible(false);
-                }
-            });
+        return new Promise<0>(async (resolve, reject) => {
+            const result = await dispatch(dalyTableThunks.fetchDalyItemAdded(dalyItem));
+
+            if (result.payload === fetchErrors.common) reject();
+            else {
+                setVisible(false);
+                resolve(0);
+            }
         })
     };
 

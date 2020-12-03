@@ -1,6 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import Item from 'antd/lib/list/Item';
-import { addHours } from 'date-fns';
+import { addHours, startOfDay } from 'date-fns';
 import { fetchErrors, isLoading } from '../../../common-types';
 import { RootState } from '../../../redux';
 import { errorModalActions } from '../../error-modal';
@@ -10,7 +10,7 @@ let MOCK_ID = 2;
 const MOCK_DALY_ITEMS = [
     {
         key: 0,
-        date: new Date().toUTCString(),
+        date: startOfDay(new Date()).toUTCString(),
         keyTask: 228,
         desctiption: 'Какое-то описание для действий по таску 228',
         timeStart: addHours(new Date(), -4).toUTCString(),
@@ -18,7 +18,7 @@ const MOCK_DALY_ITEMS = [
     },
     {
         key: 1,
-        date: new Date().toUTCString(),
+        date: startOfDay(new Date()).toUTCString(),
         keyTask: 1488,
         desctiption: 'Какое-то описание для действий по таску 1488',
         timeStart: addHours(new Date(), -2).toUTCString(),
@@ -78,11 +78,12 @@ const thunks = {
         `${SLICE_NAME}/fetchEditItem`,
         async (editedItem, thunkAPI) => {
             try {
+                const { cancelEditItem } = thunkAPI.getState().dalyTable;
+                if (cancelEditItem) return;
                 MOCK_DALY_ITEMS[
                     MOCK_DALY_ITEMS.findIndex(item => item.key === editedItem.key)
                 ] = editedItem;
-                MOCK_DALY_ITEMS.push();
-                return MOCK_DALY_ITEMS;
+                return [...MOCK_DALY_ITEMS];
             }
             catch(e) {
                 thunkAPI.dispatch(errorModalActions.showError({
@@ -125,6 +126,9 @@ const { actions, reducer } = createSlice({
 
         builder.addCase(thunks.fetchEditItem.pending, (state) => {
             state.cancelEditItem = false;
+        });
+        builder.addCase(thunks.fetchEditItem.fulfilled, (state, action) => {
+            adapter.setAll(state, action.payload);
         });
     }
 });
