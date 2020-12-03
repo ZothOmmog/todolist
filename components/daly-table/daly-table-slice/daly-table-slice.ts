@@ -1,6 +1,6 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import Item from 'antd/lib/list/Item';
-import { addHours, startOfDay } from 'date-fns';
+import { addHours, compareAsc, startOfDay } from 'date-fns';
 import { fetchErrors, isLoading } from '../../../common-types';
 import { RootState } from '../../../redux';
 import { errorModalActions } from '../../error-modal';
@@ -30,7 +30,10 @@ const SLICE_NAME = 'dalyTable';
 
 const adapter = createEntityAdapter<types.IDalyTableItemTask>({
     selectId: item => item.key,
-    sortComparer: (itemA, itemB) => itemA.key - itemB.key
+    sortComparer: (itemA, itemB) => compareAsc(
+        new Date(itemA.date),
+        new Date(itemB.date)
+    )
 });
 
 const thunks = {
