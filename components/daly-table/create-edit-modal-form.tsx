@@ -58,7 +58,6 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             const values = await form.validateFields();
 
             const newDalyItem: IDalyItemForFetch = {
-                date: values.date.startOf('day').toDate().toUTCString(),
                 desctiption: values.desctiption,
                 keyTask: values.keyTask,
                 timeEnd: values.timeEnd.toDate().toUTCString(),

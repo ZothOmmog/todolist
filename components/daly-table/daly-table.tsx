@@ -120,7 +120,6 @@ export const DalyTable: React.FC = () => {
                         else {
                             const value = await dispatch(dalyTableThunks.fetchEditItem({
                                 key: keyEditItem,
-                                date: newDalyItem.date,
                                 timeStart: newDalyItem.timeStart,
                                 timeEnd: newDalyItem.timeEnd,
                                 desctiption: newDalyItem.desctiption,

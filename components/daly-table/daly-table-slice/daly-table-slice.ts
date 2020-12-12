@@ -1,7 +1,9 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import Item from 'antd/lib/list/Item';
 import { addHours, compareAsc, startOfDay } from 'date-fns';
+import { dalyTableApi } from '../../../api/daly-table-api';
 import { fetchErrors, isLoading } from '../../../common-types';
+import { normalizeTodosFromDb } from '../../../helpers/normalize-todos-from-db';
 import { RootState } from '../../../redux';
 import { errorModalActions } from '../../error-modal';
 import * as types from './daly-table-slice-types';
@@ -39,8 +41,16 @@ const adapter = createEntityAdapter<types.IDalyTableItemTask>({
 const thunks = {
     fetchDalyItems: createAsyncThunk(
         `${SLICE_NAME}/fetchDalyItems`,
-        () => {
-            return [...MOCK_DALY_ITEMS];
+        async (_, thunkAPI) => {
+            try {
+                return normalizeTodosFromDb(await dalyTableApi.getAll());
+            } catch(e) {
+                thunkAPI.dispatch(errorModalActions.showError({
+                    title: 'Ошибка при получении записи',
+                    message: e.message
+                }));
+                return thunkAPI.rejectWithValue(fetchErrors.common);
+            }
         }
     ),
     fetchDalyItemAdded: createAsyncThunk<
@@ -54,25 +64,21 @@ const thunks = {
         `${SLICE_NAME}/fetchDalyItemAdded`,
         async (dalyItem, thunkAPI) => {
             //Имитация задержки ответа
-            await new Promise((resolve) => setTimeout(() => resolve(), 2000));
+            await new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
             try {
                 const { cancelAddItem } = thunkAPI.getState().dalyTable;
                 if (cancelAddItem) return;
-                MOCK_DALY_ITEMS.push({ ...dalyItem, key: MOCK_ID++ });
-                return [...MOCK_DALY_ITEMS];
+
+                const result = await dalyTableApi.addTask(dalyItem);
+                return normalizeTodosFromDb(result);
             }
             catch(e) {
-                thunkAPI.dispatch(errorModalActions.showError({
-                    title: 'Ошибка при добавлении записи',
-                    message: e.message
-                }));
-                return thunkAPI.rejectWithValue(fetchErrors.common);
             }
         }
     ),
     fetchEditItem: createAsyncThunk<
         types.IDalyTableItemTask[],
-        types.IDalyTableItemTask,
+        types.IDalyTableItemTaskDB,
         {
             rejectValue: fetchErrors,
             state: RootState
@@ -83,10 +89,9 @@ const thunks = {
             try {
                 const { cancelEditItem } = thunkAPI.getState().dalyTable;
                 if (cancelEditItem) return;
-                MOCK_DALY_ITEMS[
-                    MOCK_DALY_ITEMS.findIndex(item => item.key === editedItem.key)
-                ] = editedItem;
-                return [...MOCK_DALY_ITEMS];
+
+                const result = await dalyTableApi.updateTask(editedItem);
+                return normalizeTodosFromDb(result);
             }
             catch(e) {
                 thunkAPI.dispatch(errorModalActions.showError({

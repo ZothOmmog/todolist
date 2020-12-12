@@ -7,6 +7,14 @@ export interface IDalyTableItemTask {
     desctiption: string
 }
 
+export interface IDalyTableItemTaskDB {
+    key: number,
+    timeStart: string,
+    timeEnd: string,
+    keyTask: number,
+    desctiption: string
+}
+
 export interface ISliceState {
     items: IDalyTableItemTask[]
 }
@@ -17,7 +25,6 @@ export interface IDalyItemsReceivedAction {
 }
 
 export interface IDalyItemForFetch {
-    date: string,
     timeStart: string,
     timeEnd: string,
     keyTask: number,
