@@ -4,10 +4,11 @@ import { dalyTableSelectors, dalyTableThunks, IDalyTableItemTask } from './daly-
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../redux';
 import { CreateButton } from './create-button';
-import { format } from 'date-fns';
+import { addHours, format, startOfDay } from 'date-fns';
 import moment, { Moment } from 'moment';
 import { CreateEditModalForm } from './create-edit-modal-form';
 import { fetchErrors } from '../../common-types';
+import { timeEnd } from 'console';
 
 const EditableRow: React.FC<unknown> = (props) => {
     return (
@@ -76,7 +77,14 @@ export const DalyTable: React.FC = () => {
 
     return (
         <>
-            <CreateButton />
+            <CreateButton
+                initialValues={{
+                    date: startOfDay(new Date()).toUTCString(),
+                    keyTask: dataSource[dataSource.length - 1]?.keyTask,
+                    timeStart: dataSource[dataSource.length - 1]?.timeEnd,
+                    timeEnd: new Date().toUTCString()
+                }}
+            />
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}

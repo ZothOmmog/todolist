@@ -5,7 +5,16 @@ import { useAppDispatch } from '../../redux';
 import { CreateEditModalForm } from './create-edit-modal-form';
 import { dalyTableActions, dalyTableThunks, IDalyItemForFetch } from './daly-table-slice';
 
-export const CreateButton: React.FC = () => {
+interface ICreateButtonProps {
+    initialValues: {
+        date: string,
+        timeStart: string,
+        timeEnd: string,
+        keyTask: number,
+    }
+}
+
+export const CreateButton = ({ initialValues }: ICreateButtonProps) => {
     const [visible, setVisible] = useState(false);
 
     const dispatch = useAppDispatch();
@@ -34,6 +43,7 @@ export const CreateButton: React.FC = () => {
         <>
             <Button type='primary' onClick={showModal} style={{ marginBottom: 16, alignSelf: 'flex-start' }}>Добавить запись (Ctrl+Shift+a)</Button>
             <CreateEditModalForm
+                initialValues={initialValues}
                 onCancel={onCancel}
                 onCreate={onCreate}
                 visible={visible}

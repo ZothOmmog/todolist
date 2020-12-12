@@ -13,16 +13,16 @@ const MOCK_DALY_ITEMS = [
         date: startOfDay(new Date()).toUTCString(),
         keyTask: 228,
         desctiption: 'Какое-то описание для действий по таску 228',
-        timeStart: addHours(new Date(), -4).toUTCString(),
-        timeEnd: addHours(new Date(), -2).toUTCString()
+        timeStart: addHours(new Date(), -5).toUTCString(),
+        timeEnd: addHours(new Date(), -3).toUTCString()
     },
     {
         key: 1,
         date: startOfDay(new Date()).toUTCString(),
         keyTask: 1488,
         desctiption: 'Какое-то описание для действий по таску 1488',
-        timeStart: addHours(new Date(), -2).toUTCString(),
-        timeEnd: new Date().toUTCString()
+        timeStart: addHours(new Date(), -3).toUTCString(),
+        timeEnd: addHours(new Date(), -2).toUTCString()
     }
 ];
 
@@ -31,8 +31,8 @@ const SLICE_NAME = 'dalyTable';
 const adapter = createEntityAdapter<types.IDalyTableItemTask>({
     selectId: item => item.key,
     sortComparer: (itemA, itemB) => compareAsc(
-        new Date(itemA.date),
-        new Date(itemB.date)
+        new Date(itemA.timeStart),
+        new Date(itemB.timeStart)
     )
 });
 

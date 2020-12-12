@@ -14,6 +14,11 @@ interface ICreateEditModalFormProps {
         timeEnd: string,
         keyTask: number,
         desctiption: string
+    } | {
+        date: string,
+        timeStart: string,
+        timeEnd: string,
+        keyTask: number
     };
     onCreate: (values: IDalyItemForFetch) => Promise<0 | 1>;
     onCancel: () => void;
