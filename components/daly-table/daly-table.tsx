@@ -3,9 +3,9 @@ import { Table } from 'antd';
 import { dalyTableSelectors, dalyTableThunks, IDalyTableItemTask } from './daly-table-slice';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../redux';
-import { CreateButton } from './create-button';
+import { CreateButton } from './components/create-button';
 import { format, startOfDay } from 'date-fns';
-import { CreateEditModalForm } from './create-edit-modal-form';
+import { CreateEditModalForm } from './components/create-edit-modal-form';
 import { fetchErrors } from '../../common-types';
 
 const EditableRow: React.FC<unknown> = (props) => {

@@ -1,6 +1,6 @@
 import { startOfDay } from "date-fns";
 import { useEffect, useState } from "react";
-import { InitialValues } from "./form-types";
+import { InitialValues } from "./daly-table-types";
 
 export const useNormalizeInitValues = (
     initialValues: InitialValues,

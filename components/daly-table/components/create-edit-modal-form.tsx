@@ -1,9 +1,9 @@
 import { Button, Form, Modal, Input, TimePicker, Row, Col, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { IDalyItemForFetch } from './daly-table-slice';
-import { InitialValues } from './form-types';
-import { useNormalizeInitValues } from './use-normalize-init-values';
+import { IDalyItemForFetch } from '../daly-table-slice';
+import { InitialValues } from '../daly-table-types';
+import { useNormalizeInitValues } from '../use-normalize-init-values';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
