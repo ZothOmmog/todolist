@@ -72,7 +72,7 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
     };
 
     return {
-        tableProps: { onRow, components },
+        dalyTableProps: { onRow, components },
         createEditModalFormProps: {
             onCancel,
             onCreate,

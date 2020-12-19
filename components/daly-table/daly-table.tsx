@@ -10,7 +10,7 @@ export const DalyTable: React.FC = () => {
     const dataSource = useDalyTableDataSource();
     const columns = useDalyTableColumns();
     const {
-        tableProps,
+        dalyTableProps,
         createEditModalFormProps
     } = useDalyTableEditItemData(setVisibleCreateEditForm);
 
@@ -29,7 +29,7 @@ export const DalyTable: React.FC = () => {
                 bordered
                 dataSource={dataSource}
                 columns={columns}
-                {...tableProps}
+                {...dalyTableProps}
             />
             <CreateEditModalForm
                 visible={visibleCreateEditForm}
