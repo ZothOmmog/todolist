@@ -1,25 +1,15 @@
-import { Button, Form, Modal, Input, DatePicker, TimePicker, Row, Col, notification } from 'antd';
+import { Button, Form, Modal, Input, TimePicker, Row, Col, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { IDalyItemForFetch } from './daly-table-slice';
-import { startOfDay } from 'date-fns';
+import { InitialValues } from './form-types';
+import { useNormalizeInitValues } from './use-normalize-init-values';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
 interface ICreateEditModalFormProps {
     visible: boolean;
-    initialValues?: {
-        date: string,
-        timeStart: string,
-        timeEnd: string,
-        keyTask: number,
-        desctiption: string
-    } | {
-        date: string,
-        timeStart: string,
-        timeEnd: string,
-        keyTask: number
-    };
+    initialValues?: InitialValues,
     onCreate: (values: IDalyItemForFetch) => Promise<0 | 1>;
     onCancel: () => void;
     isEdit: boolean;
@@ -27,9 +17,7 @@ interface ICreateEditModalFormProps {
 
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     visible,
-    initialValues = {
-        date: startOfDay(new Date()).toUTCString()
-    },
+    initialValues,
     onCreate,
     onCancel,
     isEdit
@@ -44,11 +32,11 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     }, [visible]);
 
     useEffect(() => {
-        form.resetFields();
+        if (visible) form.resetFields();
     }, [visible]);
 
     const handleCancel = () => {
-        form.resetFields();
+        // form.resetFields();
         onCancel();
     }
 
@@ -105,6 +93,13 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         }
     };
 
+    const initValuesNozmalized = useNormalizeInitValues(
+        initialValues,
+        isEdit,
+        form.resetFields,
+        visible
+    );
+
     return (
         <Modal
             // forceRender //Чтобы не было ошибки из-за того, что создан экземпляр формы через useForm, но не привязан к форме
@@ -121,21 +116,11 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
                 layout="vertical"
                 form={form}
                 initialValues={{
-                    ...initialValues,
-                    date: moment(initialValues.date),
-                    timeStart: initialValues.timeStart ? moment(initialValues.timeStart) : null,
-                    timeEnd: initialValues.timeEnd ? moment(initialValues.timeEnd) : null
+                    ...initValuesNozmalized,
+                    timeStart: initValuesNozmalized.timeStart ? moment(initValuesNozmalized.timeStart) : null,
+                    timeEnd: initValuesNozmalized.timeEnd ? moment(initValuesNozmalized.timeEnd) : null
                 }}
             >
-                <Form.Item
-                    name='date'
-                    label='Дата выполнения действия'
-                    rules={[{ type: 'date', required: true, message: REQUIRE_HINT }]}
-                >
-                    <DatePicker
-                        format='DD.MM.YYYY'
-                    />
-                </Form.Item>
                 <Form.Item
                     name='keyTask'
                     label='Номер таска'
