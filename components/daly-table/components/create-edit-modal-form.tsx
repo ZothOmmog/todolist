@@ -1,25 +1,14 @@
-import { Button, Form, Modal, Input, DatePicker, TimePicker, Row, Col, notification } from 'antd';
+import { Button, Form, Modal, Input, TimePicker, Row, Col, notification } from 'antd';
 import { useEffect, useState } from 'react';
-import moment, { Moment } from 'moment';
-import { IDalyItemForFetch } from './daly-table-slice';
-import { startOfDay } from 'date-fns';
+import moment from 'moment';
+import { IDalyItemForFetch } from '../daly-table-slice';
+import { InitialValues } from '../daly-table-types';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
 interface ICreateEditModalFormProps {
     visible: boolean;
-    initialValues?: {
-        date: string,
-        timeStart: string,
-        timeEnd: string,
-        keyTask: number,
-        desctiption: string
-    } | {
-        date: string,
-        timeStart: string,
-        timeEnd: string,
-        keyTask: number
-    };
+    initialValues?: InitialValues,
     onCreate: (values: IDalyItemForFetch) => Promise<0 | 1>;
     onCancel: () => void;
     isEdit: boolean;
@@ -27,9 +16,7 @@ interface ICreateEditModalFormProps {
 
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     visible,
-    initialValues = {
-        date: startOfDay(new Date()).toUTCString()
-    },
+    initialValues,
     onCreate,
     onCancel,
     isEdit
@@ -44,13 +31,8 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     }, [visible]);
 
     useEffect(() => {
-        form.resetFields();
+        if (visible) form.resetFields();
     }, [visible]);
-
-    const handleCancel = () => {
-        form.resetFields();
-        onCancel();
-    }
 
     const handleOk = async () => {
         try{
@@ -109,37 +91,28 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         <Modal
             // forceRender //Чтобы не было ошибки из-за того, что создан экземпляр формы через useForm, но не привязан к форме
             visible={visible}
-            onCancel={handleCancel}
+            onCancel={onCancel}
             onOk={handleOk}
             title={`${isEdit ? 'Редактировать' : 'Добавить'} запись`}
             footer={[
-                <Button key='back' onClick={handleCancel}>Отмена</Button>,
+                <Button key='back' onClick={onCancel}>Отмена</Button>,
                 <Button key='submit' type='primary' loading={loading} onClick={handleOk}>{isEdit ? 'Редактировать' : 'Создать'}</Button>
             ]}
         >
             <Form
                 layout="vertical"
                 form={form}
-                initialValues={{
+                initialValues={initialValues ? {
                     ...initialValues,
-                    date: moment(initialValues.date),
                     timeStart: initialValues.timeStart ? moment(initialValues.timeStart) : null,
                     timeEnd: initialValues.timeEnd ? moment(initialValues.timeEnd) : null
-                }}
+                } : null}
             >
-                <Form.Item
-                    name='date'
-                    label='Дата выполнения действия'
-                    rules={[{ type: 'date', required: true, message: REQUIRE_HINT }]}
-                >
-                    <DatePicker
-                        format='DD.MM.YYYY'
-                    />
-                </Form.Item>
                 <Form.Item
                     name='keyTask'
                     label='Номер таска'
-                    rules={[{ required: true, message: REQUIRE_HINT }]}
+                    rules={[{ required: true, message: REQUIRE_HINT }, {type: 'number', message: 'Допускаются только цифры'}]}
+                    getValueFromEvent={event => Number(event.target.value) ? Number(event.target.value) : event.target.value}
                 >
                     <Input />
                 </Form.Item>
