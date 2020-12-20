@@ -51,7 +51,7 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
                     timeStart: newDalyItem.timeStart,
                     timeEnd: newDalyItem.timeEnd,
                     desctiption: newDalyItem.desctiption,
-                    keyTask: Number(newDalyItem.keyTask)
+                    keyTask: newDalyItem.keyTask
                 }));
 
                 if (value.payload === fetchErrors.common) reject();

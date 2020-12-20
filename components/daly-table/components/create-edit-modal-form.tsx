@@ -111,7 +111,8 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
                 <Form.Item
                     name='keyTask'
                     label='Номер таска'
-                    rules={[{ required: true, message: REQUIRE_HINT }]}
+                    rules={[{ required: true, message: REQUIRE_HINT }, {type: 'number', message: 'Допускаются только цифры'}]}
+                    getValueFromEvent={event => Number(event.target.value) ? Number(event.target.value) : event.target.value}
                 >
                     <Input />
                 </Form.Item>
