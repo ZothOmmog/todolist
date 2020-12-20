@@ -6,19 +6,22 @@ export const useTasksTableColumns = () => {
     const columns: ColumnsType<IAgregateTaskInfo> = [
         {
             title: 'Номер таска',
-            dataIndex: 'keyTask',
+            dataIndex: 'key',
             align: 'right',
-            defaultSortOrder: 'ascend'
+            defaultSortOrder: 'ascend',
+            width: 200
         },
         {
             title: 'Общие временные затраны',
-            dataIndex: 'spendingAll',
+            dataIndex: 'durationAll',
             align: 'right',
+            width: 400
         },
         {
             title: `Временные затраты за сегодня (${format(new Date(), 'dd.MM.yyyy')})`,
-            dataIndex: 'spendingToday',
+            dataIndex: 'durationToday',
             align: 'right',
+            width: 400
         }
     ];
     return columns;

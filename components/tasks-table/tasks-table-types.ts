@@ -1,7 +1,10 @@
-import ExportTypography from "antd/lib/typography/Typography";
-
 export interface IAgregateTaskInfo {
-    keyTask: number,
-    spendingAll: string,
-    spendingToday: string
+    key: number;
+    durationAll: string;
+    durationToday: string;
+}
+
+export interface IDetailTaskInfo {
+    date: string;
+    duration: string;
 }

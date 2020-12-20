@@ -1,0 +1,1 @@
+export { DetailTasksTable } from './detail-tasks-table';

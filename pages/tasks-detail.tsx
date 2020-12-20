@@ -12,7 +12,8 @@ export default function Home() {
                 flexDirection: 'column',
                 padding: 24,
                 margin: 0,
-                flexGrow: 1
+                flexGrow: 1,
+                overflow: 'auto'
             }}>
                 <TasksTable />
             </Content>
