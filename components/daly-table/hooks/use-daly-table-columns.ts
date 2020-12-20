@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { IDalyTableItemTask } from './daly-table-slice';
+import { IDalyTableItemTask } from '../daly-table-slice';
 
 export const useDalyTableColumns = () => {
     const renderTimeFromUtc = (dateStrUtc: string) => format(new Date(dateStrUtc), 'HH:mm:ss');

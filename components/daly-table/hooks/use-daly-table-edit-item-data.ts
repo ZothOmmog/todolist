@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { fetchErrors } from "../../common-types";
-import { useAppDispatch } from "../../redux";
-import { EditableRow } from "./components/EditableRow";
-import { dalyTableThunks } from "./daly-table-slice";
-import { IEditedDalyItem, IEditItemData, IFullDalyItem } from "./daly-table-types";
+import { fetchErrors } from "../../../common-types";
+import { useAppDispatch } from "../../../redux";
+import { EditableRow } from "../components/EditableRow";
+import { dalyTableThunks } from "../daly-table-slice";
+import { IEditedDalyItem, IEditItemData, IFullDalyItem } from "../daly-table-types";
 
 export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) => void): IEditItemData => {
     const [editFormData, setEditFormData] = useState<{

@@ -1,10 +1,10 @@
 import { compareAsc } from "date-fns";
 import { startOfDay } from "date-fns/esm";
 import { useEffect, useState } from "react";
-import { fetchErrors } from "../../common-types";
-import { useAppDispatch } from "../../redux";
-import { dalyTableActions, dalyTableThunks, IDalyItemForFetch, IDalyTableItemTask } from "./daly-table-slice";
-import { ICreateItemData, IInitValuesCreate } from "./daly-table-types";
+import { fetchErrors } from "../../../common-types";
+import { useAppDispatch } from "../../../redux";
+import { dalyTableActions, dalyTableThunks, IDalyItemForFetch, IDalyTableItemTask } from "../daly-table-slice";
+import { ICreateItemData, IInitValuesCreate } from "../daly-table-types";
 
 export const useDalyTableCreateItemData = (
     dalyItems: IDalyTableItemTask[],

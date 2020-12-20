@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
 import { Button, Table } from 'antd';
 import { CreateEditModalForm } from './components/create-edit-modal-form';
-import { useDalyTableColumns } from './use-daly-table-columns';
-import { useDalyTableDataSource } from './use-daly-table-data-source';
-import { useDalyTableEditItemData } from './use-daly-table-edit-item-data';
-import { useDalyTableCreateItemData } from './use-daly-table-create-item-data';
-import { useDalyTableCreateEditItemData } from './use-daly-table-create-edit-item-data';
+import { 
+    useDalyTableColumns, 
+    useDalyTableCreateEditItemData,
+    useDalyTableDataSource
+} from './hooks';
 
 export const DalyTable: React.FC = () => {
-    const [visibleCreateEditForm, setVisibleCreateEditForm] = useState(false);
     const dataSource = useDalyTableDataSource();
     const columns = useDalyTableColumns();
     const {
@@ -16,7 +14,6 @@ export const DalyTable: React.FC = () => {
         dalyTableProps,
         createEditModalForm
     } = useDalyTableCreateEditItemData(dataSource);
-
 
     return (
         <>
@@ -36,7 +33,6 @@ export const DalyTable: React.FC = () => {
                 {...dalyTableProps}
             />
             <CreateEditModalForm
-                visible={visibleCreateEditForm}
                 {...createEditModalForm}
             />
         </>

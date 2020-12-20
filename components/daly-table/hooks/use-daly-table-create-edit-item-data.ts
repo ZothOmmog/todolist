@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { IDalyTableItemTask } from "./daly-table-slice";
-import { FormTypes, ICreateModalFormPropsFull, IEditModalFormPropsFull } from "./daly-table-types";
+import { IDalyTableItemTask } from "../daly-table-slice";
+import { FormTypes, ICreateModalFormPropsFull, IEditModalFormPropsFull } from "../daly-table-types";
 import { useDalyTableCreateItemData } from "./use-daly-table-create-item-data";
 import { useDalyTableEditItemData } from "./use-daly-table-edit-item-data";
 
