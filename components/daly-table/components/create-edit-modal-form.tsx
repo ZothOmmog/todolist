@@ -34,11 +34,6 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         if (visible) form.resetFields();
     }, [visible]);
 
-    const handleCancel = () => {
-        // form.resetFields();
-        onCancel();
-    }
-
     const handleOk = async () => {
         try{
             setLoading(true);
@@ -96,11 +91,11 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         <Modal
             // forceRender //Чтобы не было ошибки из-за того, что создан экземпляр формы через useForm, но не привязан к форме
             visible={visible}
-            onCancel={handleCancel}
+            onCancel={onCancel}
             onOk={handleOk}
             title={`${isEdit ? 'Редактировать' : 'Добавить'} запись`}
             footer={[
-                <Button key='back' onClick={handleCancel}>Отмена</Button>,
+                <Button key='back' onClick={onCancel}>Отмена</Button>,
                 <Button key='submit' type='primary' loading={loading} onClick={handleOk}>{isEdit ? 'Редактировать' : 'Создать'}</Button>
             ]}
         >
