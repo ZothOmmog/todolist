@@ -26,14 +26,6 @@ export const useDalyTableColumns = () => {
         {
             title: 'Описание',
             dataIndex: 'desctiption'
-        },
-        {
-            title: 'Действия',
-            dataIndex: 'actions',
-            render: (_text: any, record: IDalyTableItemTask) => {
-                
-                return 'В разработке :)';
-            }
         }
     ]
 };
