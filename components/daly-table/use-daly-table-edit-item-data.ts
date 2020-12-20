@@ -3,10 +3,9 @@ import { fetchErrors } from "../../common-types";
 import { useAppDispatch } from "../../redux";
 import { EditableRow } from "./components/EditableRow";
 import { dalyTableThunks } from "./daly-table-slice";
+import { IEditedDalyItem, IEditItemData, IFullDalyItem } from "./daly-table-types";
 
-
-
-export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) => void) => {
+export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) => void): IEditItemData => {
     const [editFormData, setEditFormData] = useState<{
         timeStart: string,
         timeEnd: string,
@@ -21,7 +20,7 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
         },
     };
 
-    const onRow = (record) => ({
+    const onRow = (record: IFullDalyItem) => ({
         onClick() {
             setEditFormData({
                 timeStart: record.timeStart,
@@ -41,7 +40,7 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
     };
 
     const dispatch = useAppDispatch();
-    const onCreate = (newDalyItem) => {
+    const onCreate = (newDalyItem: IEditedDalyItem) => {
         return new Promise<0 | 1>(async (resolve, reject) => {
             if(Object.getOwnPropertyNames(newDalyItem).every(
                 key => newDalyItem[key] === editFormData[key]
@@ -73,10 +72,11 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
 
     return {
         dalyTableProps: { onRow, components },
-        createEditModalFormProps: {
+        editModalFormProps: {
             onCancel,
             onCreate,
-            initialValues: createEditModalFormInitValues
+            initialValues: createEditModalFormInitValues,
+            isEdit: true
         }
     };
 }

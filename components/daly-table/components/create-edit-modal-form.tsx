@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { IDalyItemForFetch } from '../daly-table-slice';
 import { InitialValues } from '../daly-table-types';
-import { useNormalizeInitValues } from '../use-normalize-init-values';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
 
@@ -93,13 +92,6 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
         }
     };
 
-    const initValuesNozmalized = useNormalizeInitValues(
-        initialValues,
-        isEdit,
-        form.resetFields,
-        visible
-    );
-
     return (
         <Modal
             // forceRender //Чтобы не было ошибки из-за того, что создан экземпляр формы через useForm, но не привязан к форме
@@ -115,11 +107,11 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
             <Form
                 layout="vertical"
                 form={form}
-                initialValues={{
-                    ...initValuesNozmalized,
-                    timeStart: initValuesNozmalized.timeStart ? moment(initValuesNozmalized.timeStart) : null,
-                    timeEnd: initValuesNozmalized.timeEnd ? moment(initValuesNozmalized.timeEnd) : null
-                }}
+                initialValues={initialValues ? {
+                    ...initialValues,
+                    timeStart: initialValues.timeStart ? moment(initialValues.timeStart) : null,
+                    timeEnd: initialValues.timeEnd ? moment(initialValues.timeEnd) : null
+                } : null}
             >
                 <Form.Item
                     name='keyTask'
