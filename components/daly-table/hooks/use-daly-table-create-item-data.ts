@@ -30,12 +30,11 @@ export const useDalyTableCreateItemData = (
     };
 
     useEffect(() => {
-        if (dalyItems) {
+        if (dalyItems && dalyItems.length !== 0) {
             const dalyItemsSorted = dalyItems.sort(
                 (itemA, itemB) => compareAsc(new Date(itemA.timeStart), new Date(itemB.timeStart))
             );
             const dalyItemLast = dalyItemsSorted[dalyItemsSorted.length - 1];
-
             setCreateModalFormInitValues({
                 keyTask: dalyItemLast.keyTask,
                 timeStart: startOfDay(new Date(dalyItemLast.timeStart)) === startOfDay(new Date())
