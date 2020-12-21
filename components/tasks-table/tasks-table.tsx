@@ -1,5 +1,4 @@
 import { Table } from "antd";
-import { DetailTasksTable } from "./components";
 import { useTasksTableColumns } from "./hooks";
 import { IAgregateTaskInfo } from "./tasks-table-types";
 
@@ -43,9 +42,6 @@ export const TasksTable = () => {
             columns={columns}
             dataSource={MOCK_DATA}
             className='daly-table'
-            expandable={{
-                expandedRowRender: record => <DetailTasksTable keyTask={record.key} />
-            }}
             pagination={false}
             bordered
         />
