@@ -12,13 +12,13 @@ export const useTasksTableColumns = () => {
             width: 200
         },
         {
-            title: 'Общие временные затраны',
+            title: 'Продолжительность работы общая',
             dataIndex: 'durationAll',
             align: 'right',
             width: 400
         },
         {
-            title: `Временные затраты за сегодня (${format(new Date(), 'dd.MM.yyyy')})`,
+            title: `Продолжительность работы сегодня (${format(new Date(), 'dd.MM.yyyy')})`,
             dataIndex: 'durationToday',
             align: 'right',
             width: 400
