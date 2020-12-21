@@ -20,10 +20,15 @@ export const connectDB = (
                 
                 break;
             case 1:
-                db.createObjectStore(
+                const todosStore = db.createObjectStore(
                     DBConstants.TODOS_TABLE_NAME,
                     { keyPath: DBConstants.TODOS_TABLE_KEY_NAME, autoIncrement: true }
                 );
+                todosStore.createIndex(
+                    DBConstants.TODOS_TABLE_KEY_TASK_INDEX,
+                    DBConstants.TODOS_TABLE_KEY_TASK_ATR
+                );
+
                 console.log('Успешное обновление БД до 1 версии!');
                 break;
             default:
