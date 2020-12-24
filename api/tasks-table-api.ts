@@ -1,0 +1,88 @@
+import { IAgregateTaskInfo } from "../components/tasks-table/tasks-table-types";
+import { IDalyTableItemTaskDB } from '../components/daly-table/daly-table-slice/daly-table-slice-types';
+import { connectDB } from "../indexedDB";
+import { TODOS_TABLE_KEY_TASK_INDEX, TODOS_TABLE_NAME } from "../indexedDB/indexedDB-constants";
+import { differenceInMinutes, startOfDay } from "date-fns";
+
+const openTodosTableTransaction = (db: IDBDatabase) => {
+    const transaction = db.transaction(TODOS_TABLE_NAME, 'readonly');
+    return transaction.objectStore(TODOS_TABLE_NAME);
+}
+
+const getAgregateTaskInfo = (dalyTableItemTask: IDalyTableItemTaskDB): IAgregateTaskInfo => {
+    const timeStart = new Date(dalyTableItemTask.timeStart);
+    const timeEnd = new Date(dalyTableItemTask.timeEnd);
+
+    const dayStart = startOfDay(timeStart);
+    const dayEnd = startOfDay(timeEnd);
+
+    if (dayStart !== dayEnd) throw new Error(
+`Нарушена целостность базы данных, запись о действии должна начинаться и заканчиваться в один и тот же день
+Запись с ошибкой:
+${JSON.stringify(dalyTableItemTask, null, 4)}`
+    );
+
+    const duration = differenceInMinutes(timeEnd, timeStart);
+
+    return {
+        key: dalyTableItemTask.keyTask,
+        durationAll: duration,
+        durationToday: dayStart === startOfDay(new Date()) ? duration : 0
+    };
+}
+
+export const getAgreateTasksData = async () => {
+    const db = await new Promise<IDBDatabase>(resolve => {
+        connectDB(resolve);
+    });
+
+    const tasksKeysAll = await new Promise<IDBValidKey[]>(resolve => {
+        const todosStore = openTodosTableTransaction(db);
+        const keyTaskIndex = todosStore.index(TODOS_TABLE_KEY_TASK_INDEX);
+
+        const request = keyTaskIndex.getAllKeys();
+
+        request.onsuccess = () => {
+            if (request.result == null) resolve([]);
+            else resolve(request.result);
+        }
+    });
+
+    tasksKeysAll.forEach(taskKey => {
+        if (typeof taskKey !== 'number') 
+            throw new Error(`Таск с номером ${taskKey} имеет тип ${typeof taskKey}, в то время, как все номера тасков должны иметь тип number`);
+    })
+
+    return await new Promise<IAgregateTaskInfo[]>(resolve => {
+        const agregateTaskInfoArray: IAgregateTaskInfo[] = [];
+
+        const todosStore = openTodosTableTransaction(db);
+        const keyTaskIndex = todosStore.index(TODOS_TABLE_KEY_TASK_INDEX);
+        const request = keyTaskIndex.openCursor();
+        
+        const agregateTaskInfoMap = new Map<IDBValidKey, IAgregateTaskInfo>();
+        
+        request.onsuccess = () => {
+            const cursor = request.result;
+
+            if (cursor) {
+                const agregateTaskInfoExisting = agregateTaskInfoMap.get(cursor.key);
+
+                if (agregateTaskInfoExisting) {
+                    const { durationAll, durationToday } = getAgregateTaskInfo(cursor.value);
+                    agregateTaskInfoExisting.durationAll += durationAll;
+                    agregateTaskInfoExisting.durationToday += durationToday;
+                }
+                else {
+                    const agregateTaskInfo: IAgregateTaskInfo = getAgregateTaskInfo(cursor.value);
+                    agregateTaskInfoMap.set(cursor.key, agregateTaskInfo);
+                }
+
+                cursor.continue();
+            }
+            else {
+                resolve(agregateTaskInfoArray);
+            }
+        };
+    });
+}
