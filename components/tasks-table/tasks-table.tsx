@@ -1,46 +1,22 @@
 import { Table } from "antd";
+import { useFetch } from "../use-fetch";
 import { useTasksTableColumns } from "./hooks";
+import { TasksTableSelectors } from "./tasks-table-slice/tasks-table-selectors";
+import { tasksTableThunks } from "./tasks-table-slice/tasks-table-thunks";
 import { IAgregateTaskInfo } from "./tasks-table-types";
 
 export const TasksTable = () => {
     const columns = useTasksTableColumns();
-    const MOCK_DATA: IAgregateTaskInfo[] = [
-        {
-            key: 1234,
-            durationAll: 800,
-            durationToday: 90
-        },
-        {
-            key: 4321,
-            durationAll: 400,
-            durationToday: 180
-        },
-        {
-            key: 2345,
-            durationAll: 350,
-            durationToday: 60
-        },
-        {
-            key: 5432,
-            durationAll: 520,
-            durationToday: 200
-        },
-        {
-            key: 3456,
-            durationAll: 420,
-            durationToday: 300
-        },
-        {
-            key: 6435,
-            durationAll: 700,
-            durationToday: 200
-        },
-    ];
+    const { data, isLoading } = useFetch<IAgregateTaskInfo>(
+        async dispatch => dispatch(tasksTableThunks.fetchAll()),
+        TasksTableSelectors.selectAll
+    );
 
     return (
         <Table<IAgregateTaskInfo>
             columns={columns}
-            dataSource={MOCK_DATA}
+            loading={isLoading}
+            dataSource={data}
             className='daly-table'
             pagination={false}
             bordered
