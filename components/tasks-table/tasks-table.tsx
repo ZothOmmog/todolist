@@ -7,33 +7,33 @@ export const TasksTable = () => {
     const MOCK_DATA: IAgregateTaskInfo[] = [
         {
             key: 1234,
-            durationAll: '24:40:00',
-            durationToday: '4:00:00'
+            durationAll: 800,
+            durationToday: 90
         },
         {
             key: 4321,
-            durationAll: '24:40:00',
-            durationToday: '4:00:00'
+            durationAll: 400,
+            durationToday: 180
         },
         {
             key: 2345,
-            durationAll: '24:40:00',
-            durationToday: '4:00:00'
+            durationAll: 350,
+            durationToday: 60
         },
         {
             key: 5432,
-            durationAll: '8:40:00',
-            durationToday: '4:00:00'
+            durationAll: 520,
+            durationToday: 200
         },
         {
             key: 3456,
-            durationAll: '24:40:00',
-            durationToday: '4:00:00'
+            durationAll: 420,
+            durationToday: 300
         },
         {
             key: 6435,
-            durationAll: '24:40:00',
-            durationToday: '4:00:00'
+            durationAll: 700,
+            durationToday: 200
         },
     ];
 

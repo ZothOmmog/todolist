@@ -1,7 +1,13 @@
 export interface IAgregateTaskInfo {
     key: number;
-    durationAll: string;
-    durationToday: string;
+    /**
+     * В минутах
+     */
+    durationAll: number;
+    /**
+     * В минутах
+     */
+    durationToday: number;
 }
 
 export interface IDetailTaskInfo {
