@@ -1,4 +1,4 @@
-import { compareAsc, startOfDay } from "date-fns";
+import { compareAsc, startOfDay, startOfMinute } from "date-fns";
 import { useEffect, useState } from "react";
 import { fetchErrors } from "../../../common-types";
 import { useAppDispatch } from "../../../redux";
@@ -38,9 +38,9 @@ export const useDalyTableCreateItemData = (
             setCreateModalFormInitValues({
                 keyTask: dalyItemLast.keyTask,
                 timeStart: startOfDay(new Date(dalyItemLast.timeStart)) === startOfDay(new Date())
-                    ? dalyItemLast.timeStart
-                    : new Date().toUTCString(),
-                timeEnd: new Date().toUTCString(),
+                    ? startOfMinute(new Date(dalyItemLast.timeStart)).toUTCString()
+                    : startOfMinute(new Date()).toUTCString(),
+                timeEnd: startOfMinute(new Date()).toUTCString(),
             });
         }
     }, [dalyItems]);
