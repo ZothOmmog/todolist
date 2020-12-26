@@ -1,3 +1,4 @@
+import { startOfMinute } from "date-fns";
 import { useState } from "react";
 import { fetchErrors } from "../../../common-types";
 import { useAppDispatch } from "../../../redux";
@@ -66,8 +67,8 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
     const createEditModalFormInitValues = {
         desctiption: editFormData?.desctiption,
         keyTask: editFormData?.keyTask,
-        timeEnd: editFormData?.timeEnd,
-        timeStart: editFormData?.timeStart
+        timeEnd: editFormData ? startOfMinute(new Date(editFormData.timeEnd)).toUTCString() : null,
+        timeStart: editFormData ? startOfMinute(new Date(editFormData.timeStart)).toUTCString() : null
     };
 
     return {
