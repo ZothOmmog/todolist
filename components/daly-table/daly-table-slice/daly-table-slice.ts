@@ -39,20 +39,6 @@ const adapter = createEntityAdapter<types.IDalyTableItemTask>({
 });
 
 const thunks = {
-    fetchDalyItems: createAsyncThunk(
-        `${SLICE_NAME}/fetchDalyItems`,
-        async (_, thunkAPI) => {
-            try {
-                return normalizeTodosFromDb(await dalyTableApi.getAll());
-            } catch(e) {
-                thunkAPI.dispatch(errorModalActions.showError({
-                    title: 'Ошибка при получении записи',
-                    message: e.message
-                }));
-                return thunkAPI.rejectWithValue(fetchErrors.common);
-            }
-        }
-    ),
     fetchDalyItemAdded: createAsyncThunk<
         types.IDalyTableItemTask[],
         types.IDalyItemForFetch,
@@ -115,16 +101,10 @@ const { actions, reducer } = createSlice({
         dalyItemAdded: adapter.addOne,
         cancelAddItem(state) {
             state.cancelAddItem = true;
-        }
+        },
+        dalyItemsChanged: adapter.setAll
     },
     extraReducers: builder => {
-        builder.addCase(thunks.fetchDalyItems.pending, (state) => {
-            state.isLoading = isLoading.loading;
-        });
-        builder.addCase(thunks.fetchDalyItems.fulfilled, (state, action) => {
-            adapter.setAll(state, action.payload);
-        });
-
         builder.addCase(thunks.fetchDalyItemAdded.pending, (state) => {
             state.cancelAddItem = false;
         });
