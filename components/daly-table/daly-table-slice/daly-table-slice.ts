@@ -49,8 +49,6 @@ const thunks = {
     >(
         `${SLICE_NAME}/fetchDalyItemAdded`,
         async (dalyItem, thunkAPI) => {
-            //Имитация задержки ответа
-            await new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
             try {
                 const { cancelAddItem } = thunkAPI.getState().dalyTable;
                 if (cancelAddItem) return;
