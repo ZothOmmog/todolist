@@ -2,17 +2,9 @@ import { Button, Form, Modal, Input, TimePicker, Row, Col, notification } from '
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { IDalyItemForFetch } from '../daly-table-slice';
-import { InitialValues } from '../daly-table-types';
+import { CreateEditResultStatuses, ICreateEditModalFormProps, InitialValues } from '../daly-table-types';
 
 const REQUIRE_HINT = 'Обязательно для заполнения';
-
-interface ICreateEditModalFormProps {
-    visible: boolean;
-    initialValues?: InitialValues,
-    onCreate: (values: IDalyItemForFetch) => Promise<0 | 1>;
-    onCancel: () => void;
-    isEdit: boolean;
-}
 
 export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
     visible,
@@ -48,7 +40,7 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
 
             const result = await onCreate(newDalyItem);
             
-            if (result === 0) {
+            if (result === CreateEditResultStatuses.success) {
                 notification['success']({
                     message: `${isEdit ? 'Редактирование' : 'Добавление'} записи`,
                     description: (
@@ -60,13 +52,13 @@ export const CreateEditModalForm: React.FC<ICreateEditModalFormProps> = ({
                     )
                 });
             }
-            else if (result === 1) {
+            else if (result === CreateEditResultStatuses.noChanges) {
                 notification['warning']({
                     message: 'Редактирование записи',
                     description: <>Изменений не найдено<br/>{moment(new Date()).format('DD.MM.yyyy HH:mm:ss')}</>
                 });
             }
-            else {
+            else if (result !== CreateEditResultStatuses.error) {
                 notification['error']({
                     message: `${isEdit ? 'Редактирование' : 'Добавление'} записи`,
                     description: (
