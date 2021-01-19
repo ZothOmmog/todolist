@@ -1,5 +1,7 @@
 import { compareAsc, startOfDay, startOfMinute } from "date-fns";
 import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../redux";
+import { errorModalActions } from "../../error-modal";
 import { useThunk, ResultsThunkExecute } from "../../use-thunk";
 import { IDalyItemForFetch, IDalyTableItemTask } from "../daly-table-slice";
 import { dalyTableThunks } from "../daly-table-slice/daly-table-thunks";
@@ -16,6 +18,8 @@ export const useDalyTableCreateItemData = (
         thunkCreator: dalyTableThunks.fetchDalyItemAdded,
         titleError: 'Ошибка при попытке создать новую запись'
     });
+
+    const dispatch = useAppDispatch();
 
     const onCancel = () => {
         setVisibleCreateModalForm(false);
@@ -35,9 +39,14 @@ export const useDalyTableCreateItemData = (
                 break;
             }
             default: {
-                throw Error(`Ожидается, что промис при создании элемента может разрешится, 
+                dispatch(errorModalActions.showError({ 
+                    title: 'Ошибка при редактировании записи',
+                    message: `Ожидается, что промис при редактировании элемента может разрешится, 
                     как ${ResultsThunkExecute.success} или ${ResultsThunkExecute.error}. Зафиксировано ${result}`
-                );
+                }));
+
+                resolve(CreateEditResultStatuses.error);
+                break;
             }
         }
     });

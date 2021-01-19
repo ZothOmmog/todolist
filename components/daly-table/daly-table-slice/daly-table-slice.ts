@@ -17,32 +17,6 @@ const adapter = createEntityAdapter<types.IDalyTableItemTask>({
     )
 });
 
-const thunks = {
-    fetchEditItem: createAsyncThunk<
-        types.IDalyTableItemTask[],
-        types.IDalyTableItemTaskDB,
-        {
-            rejectValue: fetchErrors,
-            state: RootState
-        }
-    >(
-        `${SLICE_NAME}/fetchEditItem`,
-        async (editedItem, thunkAPI) => {
-            try {
-                const result = await dalyTableApi.updateTask(editedItem);
-                return normalizeTodosFromDb(result);
-            }
-            catch(e) {
-                thunkAPI.dispatch(errorModalActions.showError({
-                    title: 'Ошибка при редактировании записи',
-                    message: e.message
-                }));
-                return thunkAPI.rejectWithValue(fetchErrors.common);
-            }
-        }
-    )
-}
-
 const { actions, reducer } = createSlice({
     name: SLICE_NAME,
     initialState: adapter.getInitialState({
@@ -51,17 +25,11 @@ const { actions, reducer } = createSlice({
     reducers: {
         dalyItemAdded: adapter.addOne,
         dalyItemsChanged: adapter.setAll
-    },
-    extraReducers: builder => {
-        builder.addCase(thunks.fetchEditItem.fulfilled, (state, action) => {
-            adapter.setAll(state, action.payload);
-        });
     }
 });
 
 export {
     actions as dalyTableActions,
-    thunks as dalyTableThunks,
     reducer as dalyTableReducer,
     adapter as dalyTableAdapter //export only for selectors
 };

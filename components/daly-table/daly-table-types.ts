@@ -47,7 +47,7 @@ export interface IFullDalyItem extends IInitValuesEdit {
 
 export interface IEditModalFormProps {
     onCancel: () => void,
-    onCreate: (dalyItem: IEditedDalyItem) => Promise<CreateEditResultStatuses.success | CreateEditResultStatuses.noChanges>,
+    onCreate: (dalyItem: IEditedDalyItem) => Promise<CreateEditResultStatuses>,
     initialValues: IInitValuesEdit,
     isEdit: boolean
 }
