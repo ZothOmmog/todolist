@@ -2,7 +2,7 @@ import { startOfMinute } from "date-fns";
 import { useState } from "react";
 import { useAppDispatch } from "../../../redux";
 import { errorModalActions } from "../../error-modal";
-import { ResultsThunkExecute, useThunk } from "../../use-thunk";
+import { ResultsThunkExecute, useThunk } from "../../../helpers/use-thunk";
 import { EditableRow } from "../components/EditableRow";
 import { dalyTableThunks } from "../daly-table-slice";
 import { CreateEditResultStatuses, IEditedDalyItem, IEditItemData, IFullDalyItem } from "../daly-table-types";

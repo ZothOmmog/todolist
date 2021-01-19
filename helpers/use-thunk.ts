@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { AppThunk, useAppDispatch } from "../redux";
-import { errorModalActions } from "./error-modal";
+import { errorModalActions } from "../components/error-modal";
 
 interface IOptions<T> {
     thunkCreator: (args: T) => AppThunk,

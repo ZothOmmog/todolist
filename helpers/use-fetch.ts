@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppDispatch } from "../redux";
-import { errorModalActions } from "./error-modal";
+import { errorModalActions } from "../components/error-modal";
 
 export function useFetch<T> (fetch: (dispatch: AppDispatch) => Promise<void>, dataSelector: (state: RootState) => T[]) {
     const [isLoading, setIsLoading] = useState(true);

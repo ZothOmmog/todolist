@@ -1,5 +1,5 @@
 import { Button, Table } from 'antd';
-import { useFetch } from '../use-fetch';
+import { useFetch } from '../../helpers/use-fetch';
 import { CreateEditModalForm } from './components/create-edit-modal-form';
 import { dalyTableSelectors, IDalyTableItemTask } from './daly-table-slice';
 import { dalyTableThunks } from './daly-table-slice/daly-table-thunks';
