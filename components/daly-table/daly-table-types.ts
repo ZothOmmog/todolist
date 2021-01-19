@@ -15,9 +15,15 @@ export interface IInitValuesCreate {
 
 export type InitialValues = IInitValuesCreate | IInitValuesEdit;
 
+export enum CreateEditResultStatuses {
+    success,
+    noChanges,
+    error
+}
+
 export interface ICreateModalFormProps {
     onCancel: () => void,
-    onCreate: (dalyItem: IDalyItemForFetch) => Promise<0>,
+    onCreate: (dalyItem: IDalyItemForFetch) => Promise<CreateEditResultStatuses.success | CreateEditResultStatuses.error>,
     initialValues: IInitValuesCreate,
     isEdit: boolean
 }
@@ -41,7 +47,7 @@ export interface IFullDalyItem extends IInitValuesEdit {
 
 export interface IEditModalFormProps {
     onCancel: () => void,
-    onCreate: (dalyItem: IEditedDalyItem) => Promise<0 | 1>,
+    onCreate: (dalyItem: IEditedDalyItem) => Promise<CreateEditResultStatuses.success | CreateEditResultStatuses.noChanges>,
     initialValues: IInitValuesEdit,
     isEdit: boolean
 }
