@@ -2,6 +2,7 @@ import { dalyTableApi } from "../../../api/daly-table-api";
 import { normalizeTodosFromDb } from "../../../helpers/normalize-todos-from-db";
 import { AppThunk } from "../../../redux";
 import { dalyTableActions } from "./daly-table-slice";
+import { IDalyItemForFetch } from "./daly-table-slice-types";
 
 export const dalyTableThunks = {
     fetchDalyItems: (): AppThunk => async (dispatch) => {
@@ -10,5 +11,14 @@ export const dalyTableThunks = {
                 normalizeTodosFromDb(await dalyTableApi.getAll())
             )
         );
-    }
+    },
+    fetchDalyItemAdded: (dalyItem: IDalyItemForFetch): AppThunk => async (dispatch) => {
+        const result = await dalyTableApi.addTask(dalyItem);
+        dispatch(
+            dalyTableActions.dalyItemsChanged(
+                normalizeTodosFromDb(result)
+            )
+        );
+    },
+
 }
