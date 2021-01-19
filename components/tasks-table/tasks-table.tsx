@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import { useFetch } from "../use-fetch";
+import { useFetch } from "../../helpers/use-fetch";
 import { useTasksTableColumns } from "./hooks";
 import { TasksTableSelectors } from "./tasks-table-slice/tasks-table-selectors";
 import { tasksTableThunks } from "./tasks-table-slice/tasks-table-thunks";

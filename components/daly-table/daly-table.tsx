@@ -1,19 +1,24 @@
 import { Button, Table } from 'antd';
+import { useFetch } from '../../helpers/use-fetch';
 import { CreateEditModalForm } from './components/create-edit-modal-form';
+import { dalyTableSelectors, IDalyTableItemTask } from './daly-table-slice';
+import { dalyTableThunks } from './daly-table-slice/daly-table-thunks';
 import { 
     useDalyTableColumns, 
     useDalyTableCreateEditItemData,
-    useDalyTableDataSource
 } from './hooks';
 
 export const DalyTable: React.FC = () => {
-    const dataSource = useDalyTableDataSource();
+    const { data, isLoading } = useFetch<IDalyTableItemTask>(
+        async dispatch => dispatch(dalyTableThunks.fetchDalyItems()),
+        dalyTableSelectors.selectAll
+    )
     const columns = useDalyTableColumns();
     const {
         createButtonProps,
         dalyTableProps,
         createEditModalForm
-    } = useDalyTableCreateEditItemData(dataSource);
+    } = useDalyTableCreateEditItemData(data);
 
     return (
         <>
@@ -28,7 +33,8 @@ export const DalyTable: React.FC = () => {
                 rowClassName={() => 'editable-row'}
                 className='daly-table'
                 bordered
-                dataSource={dataSource}
+                dataSource={data}
+                loading={isLoading}
                 columns={columns}
                 {...dalyTableProps}
             />

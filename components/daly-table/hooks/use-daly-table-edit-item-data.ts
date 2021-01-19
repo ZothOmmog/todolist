@@ -1,10 +1,11 @@
 import { startOfMinute } from "date-fns";
 import { useState } from "react";
-import { fetchErrors } from "../../../common-types";
 import { useAppDispatch } from "../../../redux";
+import { errorModalActions } from "../../error-modal";
+import { ResultsThunkExecute, useThunk } from "../../../helpers/use-thunk";
 import { EditableRow } from "../components/EditableRow";
 import { dalyTableThunks } from "../daly-table-slice";
-import { IEditedDalyItem, IEditItemData, IFullDalyItem } from "../daly-table-types";
+import { CreateEditResultStatuses, IEditedDalyItem, IEditItemData, IFullDalyItem } from "../daly-table-types";
 
 export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) => void): IEditItemData => {
     const [editFormData, setEditFormData] = useState<{
@@ -14,6 +15,13 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
         desctiption: string
     }>(null);
     const [keyEditItem, setKeyEditItem] = useState<number>();
+
+    const [editItem] = useThunk({
+        thunkCreator: dalyTableThunks.fetchEditItem,
+        titleError: 'Ошибка при редактировании записи'
+    });
+
+    const dispatch = useAppDispatch();
 
     const components = {
         body: {
@@ -40,25 +48,42 @@ export const useDalyTableEditItemData = (setVisibleEditForm: (visible: boolean) 
         setVisibleEditForm(false);
     };
 
-    const dispatch = useAppDispatch();
     const onCreate = (newDalyItem: IEditedDalyItem) => {
-        return new Promise<0 | 1>(async (resolve, reject) => {
+        return new Promise<CreateEditResultStatuses>(async (resolve) => {
             if(Object.getOwnPropertyNames(newDalyItem).every(
                 key => newDalyItem[key] === editFormData[key]
-            )) resolve(1);
-            else {
-                const value = await dispatch(dalyTableThunks.fetchEditItem({
-                    key: keyEditItem,
-                    timeStart: newDalyItem.timeStart,
-                    timeEnd: newDalyItem.timeEnd,
-                    desctiption: newDalyItem.desctiption,
-                    keyTask: newDalyItem.keyTask
-                }));
+            )) {
+                resolve(CreateEditResultStatuses.noChanges);
+                return;
+            }
 
-                if (value.payload === fetchErrors.common) reject();
-                else {
+            const result = await editItem({
+                key: keyEditItem,
+                timeStart: newDalyItem.timeStart,
+                timeEnd: newDalyItem.timeEnd,
+                desctiption: newDalyItem.desctiption,
+                keyTask: newDalyItem.keyTask
+            });
+
+            switch(result) {
+                case ResultsThunkExecute.success: {
                     setVisibleEditForm(false);
-                    resolve(0);
+                    resolve(CreateEditResultStatuses.success);
+                    break;
+                }
+                case ResultsThunkExecute.error: {
+                    resolve(CreateEditResultStatuses.error);
+                    break;
+                }
+                default: {
+                    dispatch(errorModalActions.showError({ 
+                        title: 'Ошибка при редактировании записи',
+                        message: `Ожидается, что промис при редактировании элемента может разрешится, 
+                        как ${ResultsThunkExecute.success} или ${ResultsThunkExecute.error}. Зафиксировано ${result}`
+                    }));
+
+                    resolve(CreateEditResultStatuses.error);
+                    break;
                 }
             }
         })
